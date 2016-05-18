@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This constant needs to be present when the script is specific to a certain Linux Distribution.
+# This Script is a template for creating new troubleshooting scenarios.
 OS=Ubuntu
 
 echo "Starting XYZ for "$OS"."
