@@ -14,7 +14,7 @@ It's easy to use and new scenarios can be attached easily by creating new plugin
 import click
 
 from subprocess import CalledProcessError, check_output
-from re import search, sub, MULTILINE, IGNORECASE
+from re import search, sub, MULTILINE, IGNORECASE, DEBUG
 from os import listdir, path
 from sys import exc_info
 from platform import dist # check Linux distribution
@@ -56,17 +56,17 @@ def organizer(problem):
         with open(script_dir + scn, 'r') as f:
             lines = f.read()
             distro_all = search("OS(\s*=\s*)([\"\']?All[\"\']?)", lines, MULTILINE | IGNORECASE)
-            distrib = search("(OS\s*=\s*)+([\"\']?\w+[\"\']?,?){1,}", lines, MULTILINE | IGNORECASE)
-            #print(distrib.group())
+            distrib = search("(OS\s?=\s?.+)", lines, MULTILINE | IGNORECASE) # OS"\s*=\s*){1,}([\"\']?\w+[\"\']?,?){1,}
+            print(distrib.group())
             if distro_all:
                 scn_validated.append(scn)
 
             elif distrib:
-                #print(distrib)
                 distrib = distrib.group().lower().split("=")[1]
-                #print("Lower or not", distrib)
 
-                distrib = sub(r'[\s*\"\']|[\s*\"\']$', '', distrib).split()
+                distrib = sub(r'[\s*\"\']|[\s*\"\']$', '', distrib).split(',')
+
+
                 distro_match = list(filter(lambda dist: dist == distro, distrib))
                 #print("Filtered:", distro_match)
                 if distro_match:
@@ -112,12 +112,10 @@ def create(problem):
             try:
                 #retcode = call(script_dir + scn) #, shell=True)
                 retcode = check_output(script_dir + scn)
-                #click.echo(retcode)
 
             except Exception as e:
                 excp = exc_info()[1]
                 click.echo(excp)
-                #print(excp)
                 click.secho("%s has failed to execute. Please, check the error mentioned above.\n" % scn, err=True, fg="yellow")
             else:
                 continue
