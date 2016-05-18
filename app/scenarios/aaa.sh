@@ -1,0 +1,3 @@
+a="RAAAAAAAAAAAAAAAAAAAFAEL"
+
+export a
