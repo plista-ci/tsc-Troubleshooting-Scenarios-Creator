@@ -13,9 +13,13 @@ It's highly recommended to (always) use a virtual environment to install it in a
 
 In order to use the commands below, please, make sure you have in addition to Python[23], virtualenv and pip installed.
 
-```
-   virtualenv venv
-  
+
+   `virtualenv venv`
+   
+If you want to choose the Python version:
+
+   `virtualenv -p python3 venv`
+```  
    cd venv ; source bin/venv
 
    cd app
