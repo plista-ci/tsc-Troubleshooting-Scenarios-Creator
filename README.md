@@ -3,6 +3,27 @@
 tsc ( Troubleshooting Scenarios Creator ) will help you create a variety of scenarios to go further on troubleshooting training and increase you skills.
 It's easy to use and new scenarios can be attached easily by creating new plugins.
 
+### Installation:
+
+Make sure you have git installed and clone the repository.
+
+`git clone https://github.com/rafasysadm/troubleshooting_scenarios.git`
+
+It's highly recommended to (always) use a virtual environment to install it in a separate environment.
+
+In order to use the commands below, please, make sure you have in addition to Python[23], virtualenv and pip installed.
+
+```
+   virtualenv venv
+  
+   cd venv ; source bin/venv
+
+   cd app
+   
+   pip install -e .
+```
+
+
 ### Usage:
 
 `tsc create -p <problem scenario>`
