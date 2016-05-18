@@ -66,7 +66,7 @@ Otherwise, if it's only applicable for one single distribution:
 
 `OS=Ubuntu`
 
-`/bin/chmod -x /bin/chmod || exit 1`
+`/bin/chmod -x /bin/chmod`
 
 
 
