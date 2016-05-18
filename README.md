@@ -1,17 +1,17 @@
-# Troubleshooting Scenarios
+# tsc ( Troubleshooting Scenarios Creator )
 
-tbs_scenarios will help you create a variety of scenarios to go further on troubleshooting training and increase you skills.
+tsc ( Troubleshooting Scenarios Creator ) will help you create a variety of scenarios to go further on troubleshooting training and increase you skills.
 It's easy to use and new scenarios can be attached easily by creating new plugins.
 
 ### Usage:
 
-`runner runit -p <problem scenario>`
+`tsc create -p <problem scenario>`
 
-`runner runit -p xyz`
+`tsc create -p xyz`
 
 Multiple:
 
-`runner runit -p xyz -p abc`
+`tsc create -p xyz -p abc`
 
 ### New scenarios:
 
