@@ -45,18 +45,23 @@ def organizer(problem):
     for scn in scenario_run:
         with open(script_dir + scn, 'r') as f:
             lines = f.read()
-            distrib = re.search("OS\s*=\s*[\"\']?\w+[\"\']?", lines, re.MULTILINE)
-            if distrib is None:
-                click.secho("\n --- %s is not compatible with %s. Feel free to contribute making a proper plugin for that.\n" %( scn, distro), err=True, fg="yellow")
-               # print(distrib)
-                continue
-            else:
+            distro_all = re.search("OS(\s*=\s*)([\"\']?All[\"\']?)", lines, re.MULTILINE | re.IGNORECASE)
+            distrib = re.search("(OS\s*=\s*)?([\"\']?\w+[\"\']?,?){1,}", lines, re.MULTILINE | re.IGNORECASE)
+            if distro_all:
+                scn_validated.append(scn)
+
+            elif distrib:
                 distrib = distrib.group().split("=")[1].lower()
-                distrib = re.sub(r'[\s*\"\']|[\s*\"\']$', '', distrib) 
-                if distrib == distro:
+                distrib = re.sub(r'[\s*\"\']|[\s*\"\']$', '', distrib).split()
+                distro_match = filter(lambda dist: dist == distro, distrib)
+                if distro_match:
                     scn_validated.append(scn)
                 else:
-                    click.secho("\n --- %s is not compatible with %s. Feel free to contribute making a proper plugin for that.\n" %( scn, distro), err=True, fg="yellow")  
+                    click.secho("\n --- %s is not compatible with %s. Feel free to contribute making a proper plugin for that.\n" %( scn, distro), err=True, fg="yellow")
+                    continue
+            else:
+                click.secho("\n --- %s is not compatible with %s. Feel free to contribute making a proper plugin for that.\n" %( scn, distro), err=True, fg="yellow")
+                   
     return scn_validated
 
 
@@ -84,21 +89,12 @@ def runit(problem):
         try:
             retcode = call(script_dir + scn)
             #retcode = Popen([script_dir, scn], shell=True)
-            # print(retcode)
-            # #print(scn)
-            # if retcode > 0:
-            #     raise 
 
-                #print("Scenario %s failed to load." % problem, retcode)
         except Exception as e:
-            # click.echo("Scenario %s failed to load." % scn, e)
-            # click.echo("Execution failed:", e, file=sys.stderr)
             #logging.error(traceback.format_exc())
             click.secho(sys.exc_info()[1], err=True, fg="yellow")
             click.secho("%s has failed to execute. Please, check plugins permissions.\n" % scn, err=True, fg="yellow")
-        # except:
         #     click.echo("Execution failed::", sys.exc_info()[0])
         else:
             click.secho("Scenario %s successfully loaded\n" % scn, fg="green")
-            #click.echo("-----------------------------------------")
 
