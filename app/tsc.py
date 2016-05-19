@@ -1,14 +1,15 @@
-
-__author__ = "Rafael Costa"
-__license__ = "MIT"
-__version__ = "0.1"
-
 """
 tsc ( Troubleshooting Scenarios Creator ) will help you create a variety of scenarios to go further
 on troubleshooting training and increase you skills.
 It's easy to use and new scenarios can be attached easily by creating new plugins.
 
 """
+
+
+
+__author__ = "Rafael Costa"
+__license__ = "MIT"
+__version__ = "0.1"
 
 
 import click
@@ -21,9 +22,18 @@ from platform import dist # check Linux distribution
 
 ####
 
+# Default help options for click changed from --help to
+# -h and --help.
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
 script_dir = path.dirname(__file__) + "/scenarios/"
 
 def validate_pr(problem):
+    """
+    validate_pr function verifies if problem scenarios
+    given as options ( --problem, -p ) exist in tsc.
+
+    """
     distro = dist()[0]
     scenario_run = []
     non_existent = []
@@ -39,7 +49,12 @@ def validate_pr(problem):
 
     return scenario_run, non_existent
 
-def organizer(problem):
+def validate_distro(problem):
+    """
+    validate_distro function works as a second validation. It confirms
+    if a given scenario can be created in the Linux distribution 
+    used.
+    """
     distro = dist()[0].lower()
     scenario_run, non_existent = validate_pr(problem)
 
@@ -50,14 +65,16 @@ def organizer(problem):
     scn_validated = []
 
     if non_existent:
-        click.secho("--- Scenario(s) not found: %s"   % " ".join(non_existent), err=True, bold=True, fg="yellow")
+        click.secho("--- Scenario(s) not found: %s\n"   % " ".join(non_existent), err=True, bold=True, fg="yellow")
+        click.secho("----------------------------------------------------------------------------------------\n", fg="white", bold=True)
 
+    # Check which Linux distribution is supported by the scripts
+    # and compare with the current Linux distribution.
     for scn in scenario_run:
         with open(script_dir + scn, 'r') as f:
             lines = f.read()
             distro_all = search("OS(\s*=\s*)([\"\']?All[\"\']?)", lines, MULTILINE | IGNORECASE)
             distrib = search("(OS\s?=\s?.+)", lines, MULTILINE | IGNORECASE) # OS"\s*=\s*){1,}([\"\']?\w+[\"\']?,?){1,}
-            print(distrib.group())
             if distro_all:
                 scn_validated.append(scn)
 
@@ -68,7 +85,6 @@ def organizer(problem):
 
 
                 distro_match = list(filter(lambda dist: dist == distro, distrib))
-                #print("Filtered:", distro_match)
                 if distro_match:
                     scn_validated.append(scn)
                 else:
@@ -83,9 +99,13 @@ def organizer(problem):
 # Creates a group, so we can nest the commands.
 @click.group()
 def tsc_cli():
+    """
+    Click cli group for tsc.
+    """
     pass
 
-@tsc_cli.command()
+
+@tsc_cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--problem', '-p',
             required=True,
             multiple=True, 
@@ -93,10 +113,18 @@ def tsc_cli():
              )
 
 def create(problem):
-    """Creates Troubleshooting scenario(s)."""
+    """
+    Creates troubleshooting scenario(s).
+    This function uses other validation functions to make
+    sure it can start loading the troubleshooting scenario(s).
+    """
+
     scenarios = "\n".join(problem)
-    scenario_run = (organizer(problem))
+    scenario_run = (validate_distro(problem))
     click.secho("Warning: If you are remotelly connected, your connection may be dropped depending on the scenario you have chosen.\n", fg="red")
+
+    click.secho("----------------------------------------------------------------------------------------\n", fg="white", bold=True)
+
     try:
         scenario_run[0]
         
@@ -107,6 +135,7 @@ def create(problem):
 
     else:
         click.secho("TSC is starting. The chosen scenario(s) will be loaded: \n- %s\n" %"\n- ".join(scenario_run), fg="green", bold=True)
+        click.secho("----------------------------------------------------------------------------------------\n", fg="white", bold=True)
         for scn in scenario_run:
             click.secho("--- %s: Starting.\n" %scn, fg="green")                  
             try:
@@ -118,6 +147,6 @@ def create(problem):
                 click.echo(excp)
                 click.secho("%s has failed to execute. Please, check the error mentioned above.\n" % scn, err=True, fg="yellow")
             else:
-                continue
+                #continue
                 click.secho("Scenario %s successfully loaded\n" % scn, fg="green")
 
