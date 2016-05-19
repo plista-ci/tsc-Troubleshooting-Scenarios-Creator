@@ -21,7 +21,6 @@ If you want to choose the Python version:
    `virtualenv -p python3 venv`
    
 Otherwise, continue as below:
-
 ``` 
 virtualenv venv
 
