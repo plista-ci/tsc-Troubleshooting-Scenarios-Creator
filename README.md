@@ -19,12 +19,17 @@ In order to use the commands below, please, make sure you have in addition to Py
 If you want to choose the Python version:
 
    `virtualenv -p python3 venv`
-```  
-   cd venv ; source bin/venv
-
-   cd app
    
-   pip install -e .
+Otherwise, continue as below:
+
+``` 
+virtualenv venv
+
+cd venv ; source bin/venv
+
+cd app
+   
+pip install -e .
 ```
 
 
