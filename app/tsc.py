@@ -7,7 +7,7 @@ It's easy to use and new scenarios can be attached easily by creating new plugin
 
 
 
-__author__ = "Rafael Costa"
+__author__ = "Rafael"
 __license__ = "MIT"
 __version__ = "0.1"
 
